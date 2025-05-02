@@ -1,9 +1,9 @@
-# Watchy-GSR-Faces
-Watchy GSR Converted Faces
-
-Credit goes to:
-
-Donkey Kong (DKTime)
-https://github.com/dezign999/dkTime (Graphics Used)
-Doom
-https://github.com/dezign999/watchy999/tree/main
+# Watchy-GSR-Faces<br/>
+Watchy GSR Converted Faces<br/>
+<br/>
+Credit goes to:<br/>
+<br/>
+Donkey Kong (DKTime)<br/>
+https://github.com/dezign999/dkTime (Graphics Used)<br/>
+Doom<br/>
+https://github.com/dezign999/watchy999/tree/main<br/>
