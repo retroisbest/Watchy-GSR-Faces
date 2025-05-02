@@ -4,7 +4,7 @@ Watchy GSR Converted Faces<br/>
 Credit goes to:<br/>
 <br/>
 Donkey Kong (DKTime)<br/>
-https://github.com/dezign999/dkTime (Graphics Used)<br/>
+https://github.com/dezign999/dkTime<br/>
 Doom<br/>
 https://github.com/dezign999/watchy999/tree/main<br/>
 Commander Keen<br/>
