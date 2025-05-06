@@ -91,12 +91,14 @@ void drawDate(const tmElements_t &time) {
     int displayMonth = time.Month + 1;  // Adjust so January is 1, February is 2, etc.
 
     // Month display with leading zero if less than 10
-    display.setCursor(35, 44);
+    //display.setCursor(35, 44);
+    display.setCursor(115, 44);
     if (displayMonth < 10) display.print("0");  // Add leading zero
     display.print(displayMonth);
 
     // Day display with leading zero if less than 10
-    display.setCursor(115, 44);
+    //display.setCursor(115, 44);
+    display.setCursor(35, 44);
     if (time.Day < 10) display.print("0");  // Add leading zero
     display.print(time.Day);
 }
