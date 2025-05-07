@@ -9,3 +9,5 @@ Doom<br/>
 https://github.com/dezign999/watchy999/tree/main<br/>
 Commander Keen<br/>
 https://github.com/synthead/watchy-keen<br/>
+DigDug<br />
+https://github.com/gooth9232/DigdugWatch/<br/>
