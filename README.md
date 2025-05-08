@@ -1,6 +1,7 @@
 # Watchy-GSR-Faces<br/>
 Watchy GSR Converted Faces<br/>
 <br/>
+Edit your GSR.INO to include any of these converted watch faces or use the example GSR.INO which includes all of them by default.<br/>
 Credit goes to:<br/>
 <br/>
 Donkey Kong (DKTime)<br/>
