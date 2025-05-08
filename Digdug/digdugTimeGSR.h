@@ -82,8 +82,8 @@ private:
         SRTC.read(time);
         adjustTimeByOffset(time, digdugtimeZone);
 
-        draw7Seg(time.Hour / 10, -1, 17);
-        draw7Seg(time.Hour % 10, 9, 17);
+        draw7Seg(time.Hour / 10, 2, 17);
+        draw7Seg(time.Hour % 10, 12, 17);
         draw7Seg(time.Minute / 10, 27, 17);
         draw7Seg(time.Minute % 10, 38, 17);
     }
