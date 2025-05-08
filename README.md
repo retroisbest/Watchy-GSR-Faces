@@ -11,3 +11,5 @@ Commander Keen<br/>
 https://github.com/synthead/watchy-keen<br/>
 DigDug<br />
 https://github.com/gooth9232/DigdugWatch/<br/>
+Skully<br/>
+https://github.com/charlesrocket/skully<br/>
