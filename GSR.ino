@@ -8,6 +8,7 @@
 #include "keenGSR.h"
 #include "digdugTimeGSR.h"
 #include "skullyGSR.h"
+#include "stationaryGSR.h"
 
 
 
