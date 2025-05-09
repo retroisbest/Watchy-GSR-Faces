@@ -7,7 +7,7 @@
 #include "doomtimeGSR.h"
 #include "keenGSR.h"
 #include "digdugTimeGSR.h"
-#include "skullyGSR.h"
+//#include "skullyGSR.h"
 #include "skullyv2GSR.h"
 #include "stationaryGSR.h"
 
