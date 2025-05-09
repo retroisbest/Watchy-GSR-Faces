@@ -5,7 +5,7 @@ Edit your GSR.INO to include any of these converted watch faces or use the examp
 <br/>
 Credit goes to:<br/>
 <br/>
-Donkey Kong (DKTime)<br/>
+Donkey Kong<br/>
 https://github.com/dezign999/dkTime<br/>
 Stationary Text <br/>
 https://github.com/BraininaBowl/Stationary-Text-for-Watchy/tree/main<br/>
