@@ -7,6 +7,8 @@ Credit goes to:<br/>
 <br/>
 Donkey Kong (DKTime)<br/>
 https://github.com/dezign999/dkTime<br/>
+Stationary Text <br/>
+https://github.com/BraininaBowl/Stationary-Text-for-Watchy/tree/main<br/>
 Doom<br/>
 https://github.com/dezign999/watchy999/tree/main<br/>
 Commander Keen<br/>
