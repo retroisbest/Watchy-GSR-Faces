@@ -33,10 +33,7 @@ class TextualTimeGSR : public WatchyGSR {
         display.setTextColor(GxEPD_WHITE);
         display.setTextWrap(false);
 
-        tmElements_t currentTime;
-        SRTC.read(currentTime);
-const int timeZoneOffset = 1;  // Change this to your UTC offset
-currentTime.Hour = (currentTime.Hour + timeZoneOffset + 24) % 24;
+        
 
         const char *lows[10] = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
         const char *teensone[11] = {"", "ten", "eleven", "twelve", "thir", "four", "fif", "six", "seven", "eight", "nine"};
@@ -47,26 +44,26 @@ currentTime.Hour = (currentTime.Hour + timeZoneOffset + 24) % 24;
         display.setFont(&NunitoSans_Bold28pt7b);
 
         display.setCursor(8, lines * 47 + 42);
-        if (currentTime.Hour == 0) {
+        if (WatchTime.Local.Hour == 0) {
           display.print(tens[2]);
           lines++;
           display.setCursor(8, lines * 47 + 42);
           display.print(lows[4]);
-        } else if (currentTime.Hour < 10) {
-          display.print(lows[currentTime.Hour]);
-        } else if (currentTime.Hour < 20) {
-          display.print(teensone[currentTime.Hour - 9]);
-          if (currentTime.Hour > 12) {
+        } else if (WatchTime.Local.Hour < 10) {
+          display.print(lows[WatchTime.Local.Hour]);
+        } else if (WatchTime.Local.Hour < 20) {
+          display.print(teensone[WatchTime.Local.Hour - 9]);
+          if (WatchTime.Local.Hour > 12) {
             lines++;
             display.setCursor(8, lines * 47 + 42);
-            display.print(teenstwo[currentTime.Hour % 10]);
+            display.print(teenstwo[WatchTime.Local.Hour % 10]);
           }
         } else {
-          display.print(tens[currentTime.Hour / 10]);
-          if (currentTime.Hour % 10 > 0) {
+          display.print(tens[WatchTime.Local.Hour / 10]);
+          if (WatchTime.Local.Hour % 10 > 0) {
             lines++;
             display.setCursor(8, lines * 47 + 42);
-            display.print(lows[currentTime.Hour % 10]);
+            display.print(lows[WatchTime.Local.Hour % 10]);
           }
         }
 
@@ -74,26 +71,26 @@ currentTime.Hour = (currentTime.Hour + timeZoneOffset + 24) % 24;
         display.setCursor(8, lines * 47 + 42);
         display.setFont(&NunitoSans_Light28pt7b);
 
-        if (currentTime.Minute == 0) {
+        if (WatchTime.Local.Minute == 0) {
           display.print("o'clock");
-        } else if (currentTime.Minute < 10) {
+        } else if (WatchTime.Local.Minute < 10) {
           display.print("oh");
           lines++;
           display.setCursor(8, lines * 47 + 42);
-          display.print(lows[currentTime.Minute]);
-        } else if (currentTime.Minute < 20) {
-          display.print(teensone[currentTime.Minute - 9]);
-          if (currentTime.Minute > 12) {
+          display.print(lows[WatchTime.Local.Minute]);
+        } else if (WatchTime.Local.Minute < 20) {
+          display.print(teensone[WatchTime.Local.Minute - 9]);
+          if (WatchTime.Local.Minute > 12) {
             lines++;
             display.setCursor(8, lines * 47 + 42);
-            display.print(teenstwo[currentTime.Minute % 10]);
+            display.print(teenstwo[WatchTime.Local.Minute % 10]);
           }
         } else {
-          display.println(tens[currentTime.Minute / 10]);
-          if (currentTime.Minute % 10 > 0) {
+          display.println(tens[WatchTime.Local.Minute / 10]);
+          if (WatchTime.Local.Minute % 10 > 0) {
             lines++;
             display.setCursor(8, lines * 47 + 42);
-            display.print(lows[currentTime.Minute % 10]);
+            display.print(lows[WatchTime.Local.Minute % 10]);
           }
         }
       }
