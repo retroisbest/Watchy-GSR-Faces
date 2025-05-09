@@ -17,3 +17,5 @@ DigDug<br />
 https://github.com/gooth9232/DigdugWatch/<br/>
 Skully<br/>
 https://github.com/charlesrocket/skully<br/>
+Skully V2 (Yesterday step counter added)<br/>
+https://github.com/charlesrocket/skully<br/>
