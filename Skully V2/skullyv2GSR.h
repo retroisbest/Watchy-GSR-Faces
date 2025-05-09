@@ -14,10 +14,17 @@
 #define DISPLAY_HEIGHT 200
 
 RTC_DATA_ATTR uint8_t skullyTimeStyle;
+RTC_DATA_ATTR uint32_t yesterdayStepStore = 0; // Persistent storage for yesterday's steps
+
 int skullyLastMinute = -1;
 
 // Time zone offset in hours (e.g., 1 for UTC+1, -5 for EST)
 const int SkullyTimeZone = 1;
+
+// Store the last displayed date for yesterday's steps
+RTC_DATA_ATTR int lastDisplayedYear = 0;
+RTC_DATA_ATTR int lastDisplayedMonth = 0;
+RTC_DATA_ATTR int lastDisplayedDay = 0;
 
 class SkullyGSRClass : public WatchyGSR {
 public:
@@ -52,7 +59,6 @@ public:
         drawDate(time);
         drawSteps(); // Updated to use CurrentStepCount()
         drawBattery(); // You might need to implement this function or remove it
-        
 
         for (uint8_t i = 0; i < 3; i++) {
             // Reduce ghosting
@@ -116,8 +122,6 @@ private:
         }
     }
 
-
-
     void drawDate(const tmElements_t &time) {
         display.setFont(&GorgeousPixel9pt7b); // Use the correct font
         display.setTextColor(GxEPD_WHITE);
@@ -131,96 +135,99 @@ private:
         display.print(String(dateStr));
     }
 
-void drawWDay(const tmElements_t &time) {
-    // Adjust for 1-based month
-    int displayMonth = time.Month + 1;  // Adjust so January is 1, February is 2, etc.
+    void drawWDay(const tmElements_t &time) {
+        // Adjust for 1-based month
+        int displayMonth = time.Month + 1;  // Adjust so January is 1, February is 2, etc.
 
-    // Create a time_t object to correctly calculate the weekday
-    tmElements_t adjustedTime = time;
-    adjustedTime.Month = displayMonth;  // Adjust month to 1-based
+        // Create a time_t object to correctly calculate the weekday
+        tmElements_t adjustedTime = time;
+        adjustedTime.Month = displayMonth;  // Adjust month to 1-based
 
-    time_t epoch = makeTime(adjustedTime); // Convert adjusted time to time_t
+        time_t epoch = makeTime(adjustedTime); // Convert adjusted time to time_t
 
-    // Calculate the weekday index (0 = Sunday, 6 = Saturday)
-    uint8_t weekday_index = weekday(epoch) - 1;  // Adjust to 0-based index
+        // Calculate the weekday index (0 = Sunday, 6 = Saturday)
+        uint8_t weekday_index = weekday(epoch) - 1;  // Adjust to 0-based index
 
-    // Define the weekday names
-    const char *weekdays[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+        // Define the weekday names
+        const char *weekdays[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
-    // Get the current weekday name
-    const char *current_weekday = weekdays[weekday_index];
+        // Get the current weekday name
+        const char *current_weekday = weekdays[weekday_index];
 
-    // Set font and color for display
-    display.setFont(&GorgeousPixel11pt7b); // Use the correct font
-    display.setTextColor(GxEPD_BLACK);
+        // Set font and color for display
+        display.setFont(&GorgeousPixel11pt7b); // Use the correct font
+        display.setTextColor(GxEPD_BLACK);
 
-    // Calculate text dimensions
-    int16_t x1, y1;
-    uint16_t w, h;
-    String dayOfWeek = String(current_weekday);
-    display.getTextBounds(dayOfWeek, 0, 0, &x1, &y1, &w, &h);
+        // Calculate text dimensions
+        int16_t x1, y1;
+        uint16_t w, h;
+        String dayOfWeek = String(current_weekday);
+        display.getTextBounds(dayOfWeek, 0, 0, &x1, &y1, &w, &h);
 
-    // Clear previous weekday area
-    display.fillRect(186 - w, 30, w + 8, h + 5, GxEPD_WHITE);
+        // Clear previous weekday area
+        display.fillRect(186 - w, 30, w + 8, h + 5, GxEPD_WHITE);
 
-    // Set cursor position and print the weekday
-    display.setCursor(189 - w, 48);
-    display.println(dayOfWeek);
-}
-
+        // Set cursor position and print the weekday
+        display.setCursor(189 - w, 48);
+        display.println(dayOfWeek);
+    }
 
 void drawSteps() {
-    display.setFont(&GorgeousPixel9pt7b); // Use the correct font
+    display.setFont(&GorgeousPixel9pt7b);
     display.setTextColor(GxEPD_WHITE);
 
     // ---------- Today's Steps ----------
     uint32_t stepCount = CurrentStepCount();
-    char stepStr[32];
-    itoa(stepCount, stepStr, 10);
-    int stepStrL = strlen(stepStr);
-    memset(stepStr, '0', 5);
-    itoa(stepCount, stepStr + max(5 - stepStrL, 0), 10);
+    char stepStr[6] = "00000";
+    String stepsToday = String(stepCount);
+    stepsToday = String("00000" + stepsToday).substring(stepsToday.length());
 
     int16_t x1, y1;
     uint16_t w, h;
-    display.getTextBounds(String(stepStr), 0, 0, &x1, &y1, &w, &h);
+    display.getTextBounds(stepsToday, 0, 0, &x1, &y1, &w, &h);
     display.drawRect(186 - w, 51, w + 8, h + 8, GxEPD_WHITE);
     display.setCursor(189 - w, 67);
-    display.println(stepStr);
+    display.println(stepsToday);
 
     // ---------- Yesterday's Steps ----------
-    uint32_t ystepCount = YesterdayStepCount(); // Or use YesterdaySteps() for formatted
-    char ystepStr[32];
-    itoa(ystepCount, ystepStr, 10);
-    int ystepStrL = strlen(ystepStr);
-    memset(ystepStr, '0', 5);
-    itoa(ystepCount, ystepStr + max(5 - ystepStrL, 0), 10);
+    tmElements_t time;
+    SRTC.read(time);
+
+    // Check if the day has changed
+    if (lastDisplayedYear != time.Year || lastDisplayedMonth != time.Month || lastDisplayedDay != time.Day) {
+        yesterdayStepStore = YesterdayStepCount(); // Capture it once per day
+        lastDisplayedYear = time.Year;
+        lastDisplayedMonth = time.Month;
+        lastDisplayedDay = time.Day;
+    }
+
+    // Always display the stored value
+    String stepsYesterday = String(yesterdayStepStore);
+    stepsYesterday = String("00000" + stepsYesterday).substring(stepsYesterday.length());
 
     int16_t yx1, yy1;
     uint16_t yw, yh;
-    display.getTextBounds(String(ystepStr), 0, 0, &yx1, &yy1, &yw, &yh);
-    display.drawRect(186 - yw, 72, yw + 8, yh + 8, GxEPD_WHITE); // Lower box
+    display.getTextBounds(stepsYesterday, 0, 0, &yx1, &yy1, &yw, &yh);
+    display.drawRect(186 - yw, 72, yw + 8, yh + 8, GxEPD_WHITE);
     display.setCursor(189 - yw, 88);
-    display.println(ystepStr);
+    display.println(stepsYesterday);
 }
+    void drawBattery() {
+        float BATTV = getBatteryVoltage() - 3.60;
+        int batt_w = constrain(((33.33 * BATTV) + 0.9), 0, 20);
 
+        // Clear previous battery area
+        display.fillRect(166, 5, 28, 12, GxEPD_WHITE);
 
-void drawBattery() {
-    float BATTV = getBatteryVoltage() - 3.60;
-    int batt_w = constrain(((33.33 * BATTV) + 0.9), 0, 20);
+        // Draw the battery outline
+        display.fillRect(163, 9, 3, 4, GxEPD_WHITE); // Left side
+        display.fillRect(168, 7, 24, 8, GxEPD_BLACK); // Main area
 
-    // Clear previous battery area
-    display.fillRect(166, 5, 28, 12, GxEPD_WHITE);
-
-    // Draw the battery outline
-    display.fillRect(163, 9, 3, 4, GxEPD_WHITE); // Left side
-    display.fillRect(168, 7, 24, 8, GxEPD_BLACK); // Main area
-
-    // Fill the battery level
-    if (BATTV > 0) {
-        display.fillRect(190 - batt_w, 9, batt_w, 4, GxEPD_WHITE);
+        // Fill the battery level
+        if (BATTV > 0) {
+            display.fillRect(190 - batt_w, 9, batt_w, 4, GxEPD_WHITE);
+        }
     }
-}
 
 };
 
